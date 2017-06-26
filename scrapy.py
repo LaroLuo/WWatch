@@ -11,11 +11,12 @@ import threading
 import time
 
 class Mytheading(threading.Thread):
-	def __init__(self,sing_url):
+	def __init__(self,sing_url,watch_datas):
 		threading.Thread.__init__(self)
 		self.sing_url = sing_url
+		self.watch_datas = watch_datas
 	def run(self):
-		read_single_page_data(self.sing_url)
+		read_single_page_data(self.sing_url,self.watch_datas)
 
 Lock = threading.Lock()
 watch = ["omega","rolex","longines","tissot","citizen","casio"]
@@ -70,11 +71,12 @@ def read_urls(i):
 			for link in row:
 				url.append(link)
 
-def read_single_page_data(single_url):
+def read_single_page_data(single_url,watch_datas):
 	watch_data = dict()
 	single_url = "http://web.archive.org"+single_url
-	print single_url
+	
 	Lock.acquire()
+	print single_url
 	try:
 		content = urllib2.urlopen(single_url)
 	except:
@@ -111,18 +113,6 @@ def read_single_page_data(single_url):
 
 
 if __name__ == '__main__':
-	# threads = []
-	# for i in range(6):
-	# 	read_urls(i)
-	# 	for sing_url in url:
-	# 		thread = Mytheading(sing_url)
-	# 		threads.append(thread)
-	# 		thread.start()
-	# 	for item in threads:
-	# 		item.join()
-
-	# 	print len(watch_datas)
-	# 	write_data_to_csv(watch_datas,i)
 	for i in range(6):
 		watch_datas = []
 		threads = []
@@ -136,6 +126,32 @@ if __name__ == '__main__':
 		print len(watch_datas)
 		write_data_to_csv(watch_datas,i)
 	print "done!"
+
+	# test
+	# i = 1
+	# watch_datas = []
+	# threads = []
+	# read_urls(i)
+	# for sing_url in url:
+	# 	thread = Mytheading(sing_url,watch_datas)
+	# 	threads.append(thread)
+	# 	thread.start()
+	# for item in threads:
+	# 	item.join()
+	# print len(watch_datas)
+	# write_data_to_csv(watch_datas,i)
+	# print "done!"
+
+
+
+
+
+
+
+
+
+
+
 
 	# print len(watch_data.keys())
 	# for item in watch_data.keys():
