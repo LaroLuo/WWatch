@@ -2,16 +2,23 @@
 import urllib2
 from bs4 import BeautifulSoup
 import re
-import selenium
 import csv
 import signal
 import sys
 from get_title import get_titel_data
+from get_desc import get_description
+import threading
+import time
 
-name_attri = ["model",""]
-make_attri = []
+class Mytheading(threading.Thread):
+	def __init__(self,sing_url):
+		threading.Thread.__init__(self)
+		self.sing_url = sing_url
+	def run(self):
+		read_single_page_data(self.sing_url)
+
+Lock = threading.Lock()
 watch_data = dict()
-all_urls = []
 watch = ["omega","rolex","longines","tissot","citizen","casio"]
 file_name = ['omega.csv',
 'rolex.csv',
@@ -20,12 +27,15 @@ file_name = ['omega.csv',
 'citizen.csv',
 'casio.csv']
 watch_datas = []
-old_version=0
-new_version=0
 url=[]
 headers= [(u'name'.encode('utf-8')),(u'手表款式').encode('utf-8'),
 (u'手表品牌').encode('utf-8'),(u'price').encode('utf-8'),(u'ww_price').encode('utf-8'),
-(u'商品编号').encode('utf-8'),(u'商品型号').encode('utf-8')]
+(u'商品编号').encode('utf-8'),(u'商品型号').encode('utf-8'),(u'机芯').encode('utf-8'),
+(u'机芯型号').encode('utf-8'),(u'表壳').encode('utf-8'),(u'尺寸').encode('utf-8'),
+(u'厚度').encode('utf-8'),(u'表冠').encode('utf-8'),(u'表底').encode('utf-8'),
+(u'表镜').encode('utf-8'),(u'表盘').encode('utf-8'),(u'表带').encode('utf-8'),
+(u'表带颜色').encode('utf-8'),(u'表扣').encode('utf-8'),(u'防水').encode('utf-8'),
+(u'功能').encode('utf-8'),(u'推出年份').encode('utf-8')]
 
 
 def write_data_to_csv(watch_datas,i):
@@ -33,14 +43,12 @@ def write_data_to_csv(watch_datas,i):
 		csvfile.write(u'\ufeff'.encode('utf8'))
 		csvwriter = csv.writer(csvfile, delimiter = ',')
 		csvwriter.writerow(headers)
-		
 		for watch_data in watch_datas:
-			for item in watch_data:
-				print watch_data[item]
-			csvwriter.writerow([watch_data[0],watch_data[1],
-				watch_data[2],watch_data[3],
-				watch_data[4],watch_data[5],
-				watch_data[6]])
+			try:
+				csvwriter.writerow(watch_data.values())
+			except:
+				print "write on no data"
+				pass
 			# csvwriter.writerow({0:watch_data[0],1:watch_data[1],
 			# 	2:watch_data[2],3:watch_data[3],
 			# 	4:watch_data[4],5:watch_data[5],
@@ -65,15 +73,23 @@ def read_urls(i):
 				url.append(link)
 
 def read_single_page_data(single_url):
+	watch_data = dict()
 	single_url = "http://web.archive.org"+single_url
 	print single_url
+	Lock.acquire()
 	try:
 		content = urllib2.urlopen(single_url)
 	except:
 		print single_url+" no response!\n"
+		Lock.release()
 		return
-	soup = BeautifulSoup(content,"lxml")
-	watch_datas.append(get_titel_data(soup,watch_data))
+	Lock.release()
+	soup = BeautifulSoup(content,"html.parser")
+	watch_data = get_titel_data(soup,watch_data)
+	watch_data = get_description(soup,watch_data)
+	Lock.acquire()
+	watch_datas.append(watch_data)
+	Lock.release()
 
 # st = soup.get_text().encode('utf-8')
 # def get_name(st):
@@ -97,12 +113,32 @@ def read_single_page_data(single_url):
 
 
 if __name__ == '__main__':
-	i=1
-	read_urls(i)
-	for sing_url in url:
-		read_single_page_data(sing_url)
-	print len(watch_datas)
-	write_data_to_csv(watch_datas,i)
+	# threads = []
+	# for i in range(6):
+	# 	read_urls(i)
+	# 	for sing_url in url:
+	# 		thread = Mytheading(sing_url)
+	# 		threads.append(thread)
+	# 		thread.start()
+	# 	for item in threads:
+	# 		item.join()
+
+	# 	print len(watch_datas)
+	# 	write_data_to_csv(watch_datas,i)
+	threads = []
+	for i in range(6):
+		read_urls(i)
+		for sing_url in url:
+			thread = Mytheading(sing_url)
+			threads.append(thread)
+			thread.start()
+			for item in threads:
+				item.join()
+		print len(watch_datas)
+		write_data_to_csv(watch_datas,i)
+
+	print "done!"
+
 	# print len(watch_data.keys())
 	# for item in watch_data.keys():
 	# 	print item
