@@ -52,7 +52,7 @@ def get_title_data_v1(soup,watch_title_data):
 	m = soup.find(attrs={"class": "goods-main-info-2"})
 	if m !=None and m.find_all('li')!= None:
 		for item in m.find_all('li'):
-			if item != None or item.i !=None or item.b !=None:
+			if item != None and item.i !=None and item.b !=None:
 				name = (strQ2B(item.b.string).rstrip(":")).encode('utf-8')
 				if(name_switch(name)==-1):
 					continue
@@ -68,7 +68,7 @@ def get_title_data_v1(soup,watch_title_data):
 
 def get_title_data_v2(soup,watch_title_data):
 	m = soup.find(attrs={"class": "info"})
-	if m != None or m.h1 != None:
+	if m != None and m.h1 != None:
 		watch_title_data[0] = m.h1.string.encode('utf-8')
 	if m.find(attrs={"class": "props"}) !=None:
 		for item in m.find(attrs={"class": "props"}).find_all("dl"):
