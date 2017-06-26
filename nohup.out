@@ -1,0 +1,22 @@
+./scrapy.py: 2: ./scrapy.py: import: not found
+from: can't read /var/mail/bs4
+./scrapy.py: 4: ./scrapy.py: import: not found
+./scrapy.py: 5: ./scrapy.py: import: not found
+./scrapy.py: 6: ./scrapy.py: import: not found
+./scrapy.py: 7: ./scrapy.py: import: not found
+from: can't read /var/mail/get_title
+from: can't read /var/mail/get_desc
+./scrapy.py: 10: ./scrapy.py: import: not found
+./scrapy.py: 11: ./scrapy.py: import: not found
+./scrapy.py: 13: ./scrapy.py: Syntax error: "(" unexpected
+./scrapy.py: 2: ./scrapy.py: import: not found
+from: can't read /var/mail/bs4
+./scrapy.py: 4: ./scrapy.py: import: not found
+./scrapy.py: 5: ./scrapy.py: import: not found
+./scrapy.py: 6: ./scrapy.py: import: not found
+./scrapy.py: 7: ./scrapy.py: import: not found
+from: can't read /var/mail/get_title
+from: can't read /var/mail/get_desc
+./scrapy.py: 10: ./scrapy.py: import: not found
+./scrapy.py: 11: ./scrapy.py: import: not found
+./scrapy.py: 13: ./scrapy.py: Syntax error: "(" unexpected
