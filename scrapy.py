@@ -18,7 +18,6 @@ class Mytheading(threading.Thread):
 		read_single_page_data(self.sing_url)
 
 Lock = threading.Lock()
-watch_data = dict()
 watch = ["omega","rolex","longines","tissot","citizen","casio"]
 file_name = ['omega.csv',
 'rolex.csv',
@@ -26,7 +25,6 @@ file_name = ['omega.csv',
 'tissot.csv',
 'citizen.csv',
 'casio.csv']
-watch_datas = []
 url=[]
 headers= [(u'name'.encode('utf-8')),(u'手表款式').encode('utf-8'),
 (u'手表品牌').encode('utf-8'),(u'price').encode('utf-8'),(u'ww_price').encode('utf-8'),
@@ -125,18 +123,18 @@ if __name__ == '__main__':
 
 	# 	print len(watch_datas)
 	# 	write_data_to_csv(watch_datas,i)
-	threads = []
 	for i in range(6):
+		watch_datas = []
+		threads = []
 		read_urls(i)
 		for sing_url in url:
 			thread = Mytheading(sing_url)
 			threads.append(thread)
 			thread.start()
-			for item in threads:
-				item.join()
+		for item in threads:
+			item.join()
 		print len(watch_datas)
 		write_data_to_csv(watch_datas,i)
-
 	print "done!"
 
 	# print len(watch_data.keys())
