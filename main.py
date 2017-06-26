@@ -43,7 +43,7 @@ def get_watch_url(all_url,watch_url,i):
 
 def write_url_to_csv(watch_url,i):
 	with open (watch[i]+".csv","wb") as csvfile:
-		csvwriter = csv.writer(csvfile,delimiter =' ')
+		csvwriter = csv.writer(csvfile,delimiter =',')
 		csvwriter.writerow(['Url'])	
 		for url in watch_url:
 			csvwriter.writerow([url])
