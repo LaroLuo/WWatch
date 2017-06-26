@@ -64,7 +64,7 @@ def write_data_to_csv(watch_datas,i):
 
 
 def read_urls(i):
-	with open (str(file_name[i])) as f:
+	with open ("./url"+str(file_name[i])) as f:
 		f_csv = csv.reader(f)
 		for row in f_csv:
 			for link in row:
