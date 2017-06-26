@@ -118,7 +118,7 @@ if __name__ == '__main__':
 		threads = []
 		read_urls(i)
 		for sing_url in url:
-			thread = Mytheading(sing_url)
+			thread = Mytheading(sing_url,watch_datas)
 			threads.append(thread)
 			thread.start()
 		for item in threads:
