@@ -44,11 +44,11 @@ headers= [(u'name'.encode('utf-8')),(u'手表款式').encode('utf-8'),
 
 
 def write_data_to_csv(watch_datas,i):
+	writeLock.acquire()
 	with open ("result/"+watch[i]+"_data.csv","wb") as csvfile:
 		csvfile.write(u'\ufeff'.encode('utf8'))
 		csvwriter = csv.writer(csvfile, delimiter = ',')
 		csvwriter.writerow(headers)
-		writeLock.acquire()
 		for watch_data in watch_datas:
 			try:
 				csvwriter.writerow(watch_data.values())

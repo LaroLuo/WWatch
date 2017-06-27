@@ -47,7 +47,7 @@ def name_switch(st):
 def get_title_data_v1(soup,watch_title_data):
 	m = soup.find(attrs={"class": "goods-main-info-1"})
 	if m != None and m.h1 != None:
-		watch_title_data[0] = m.h1.string.encode('utf-8')
+		watch_title_data[0] = m.h1.string.encode('utf-8').strip()
 	m = soup.find(attrs={"class": "goods-main-info-2"})
 	if m !=None and m.find_all('li')!= None:
 		for item in m.find_all('li'):
@@ -56,9 +56,9 @@ def get_title_data_v1(soup,watch_title_data):
 				if(name_switch(name)==-1):
 					continue
 				if item.i.string!=None:
-					value = strQ2B(item.i.string).encode('utf-8')
+					value = strQ2B(item.i.string).encode('utf-8').strip()
 				else:
-					value = strQ2B(item.i.a.string).encode('utf-8')
+					value = strQ2B(item.i.a.string).encode('utf-8').strip()
 				watch_title_data[name_switch(name)] = value
 	m =soup.find(attrs ={"class": "goods-main-info-3"})
 	if m != None:
@@ -69,25 +69,25 @@ def get_title_data_v1(soup,watch_title_data):
 def get_title_data_v2(soup,watch_title_data):
 	m = soup.find(attrs={"class": "info"})
 	if m != None and m.h1 != None:
-		watch_title_data[0] = m.h1.string.encode('utf-8')
+		watch_title_data[0] = m.h1.string.encode('utf-8').strip()
 	if m.find(attrs={"class": "props"}) !=None:
 		for item in m.find(attrs={"class": "props"}).find_all("dl"):
 			if item != None:
 				name = (strQ2B(item.dt.string).rstrip(":")).encode('utf-8')
 			if(name_switch(name)==-1):
 				continue
-			value = strQ2B(item.dd.string).encode('utf-8')
+			value = strQ2B(item.dd.string).strip().encode('utf-8')
 			watch_title_data[name_switch(name)] =  value
 	try:
 		reulst_set =  m.find(attrs={"class": "price"}).find_all("dl")
 	except:
 		return
 	try:
-		watch_title_data[4] = strQ2B(m.find("ins").string[1:]).encode('utf-8')
+		watch_title_data[4] = strQ2B(m.find("ins").string[1:].strip()).encode('utf-8')
 	except:
 		return
 	try:
-		watch_title_data[3] = strQ2B(m.find("del").string[1:]).encode('utf-8')
+		watch_title_data[3] = strQ2B(m.find("del").string[1:].strip()).encode('utf-8')
 	except:
 		return
 	return watch_title_data
