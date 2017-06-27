@@ -20,9 +20,9 @@ class Mytheading(threading.Thread):
 i=0
 urlLock = threading.Lock()
 listLock = threading.Lock()
-watch = ["omega","rolex","longines","tissot","citizen","casio"]
-file_name = ['omega.csv',
-'rolex.csv',
+watch = ["rolex","omega","longines","tissot","citizen","casio"]
+file_name = ['rolex.csv',
+'omega.csv',
 'longines.csv',
 'tissot.csv',
 'citizen.csv',
