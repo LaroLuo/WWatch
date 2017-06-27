@@ -5,7 +5,6 @@ import re
 url = "http://web.archive.org/web/20120517100431/http://www.wbiao.cn/rolex-g11189.html"
 url2 = "http://web.archive.org/web/20120619014216/http://www.wbiao.cn:80/omega-g4895.html"
 url3 = "http://web.archive.org/web/20120307175154/http://www.wbiao.cn/omega-g6394.html"
-
 def get_titel_data(soup,watch_title_data):
 	if soup.find(attrs={"class": "goods-main-info-1"})!=None:
 		return get_title_data_v1(soup,watch_title_data)

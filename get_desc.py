@@ -63,19 +63,23 @@ def get_desc_v1(soup,watch_desc):
 	dd_data = m.dd
 	i = 0
 	while dt_data != None and dd_data !=None:
-		name = dt_data.string.encode('utf-8')
-		if dd_data.string!=None:
-			value = strQ2B(dd_data.string).encode('utf-8').strip()
-		else:
-			value = strQ2B(dd_data.a.string.string).encode('utf-8').strip()
-		if(name_switch(name)==-1):
+		if dt_data.string!=None:
+			name = dt_data.string.encode('utf-8')
+			try:
+				if dd_data.string!=None:
+					value = strQ2B(dd_data.string).encode('utf-8').strip()
+				else:
+					value = strQ2B(dd_data.a.string.string).encode('utf-8').strip()
+				if(name_switch(name)==-1):
+					dt_data = dt_data.find_next("dt")
+					dd_data = dd_data.find_next("dd")
+					continue
+			except:
+				print "not value data"
+				return watch_desc
+			watch_desc[name_switch(name)] = value
 			dt_data = dt_data.find_next("dt")
 			dd_data = dd_data.find_next("dd")
-			continue
-		watch_desc[name_switch(name)] = value
-		dt_data = dt_data.find_next("dt")
-		dd_data = dd_data.find_next("dd")
-		i = i+1
 	return watch_desc
 
 def get_desc_v2(soup,watch_desc):

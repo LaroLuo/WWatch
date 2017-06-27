@@ -17,8 +17,9 @@ class Mytheading(threading.Thread):
 		self.watch_datas = watch_datas
 	def run(self):
 		read_single_page_data(self.sing_url,self.watch_datas)
-
-Lock = threading.Lock()
+i=0
+urlLock = threading.Lock()
+listLock = threading.Lock()
 watch = ["omega","rolex","longines","tissot","citizen","casio"]
 file_name = ['omega.csv',
 'rolex.csv',
@@ -72,24 +73,34 @@ def read_urls(i):
 				url.append(link)
 
 def read_single_page_data(single_url,watch_datas):
+	global i
 	watch_data = dict()
 	single_url = "http://web.archive.org"+single_url
 	
-	Lock.acquire()
+	urlLock.acquire()
 	print single_url
 	try:
 		content = urllib2.urlopen(single_url)
 	except:
-		print single_url+" no response!\n"
-		Lock.release()
-		return
-	Lock.release()
+		try:
+			content = urllib2.urlopen(single_url)
+		except:
+			print single_url+" no response!\n"
+			urlLock.release()
+			return
+	urlLock.release()
 	soup = BeautifulSoup(content,"html.parser")
 	watch_data = get_titel_data(soup,watch_data)
 	watch_data = get_description(soup,watch_data)
-	Lock.acquire()
-	watch_datas.append(watch_data)
-	Lock.release()
+	listLock.acquire()
+	print i 
+	i = i+1
+	try:
+		watch_datas.append(watch_data)
+	except:
+		listLock.release()
+		return
+	listLock.release()
 
 # st = soup.get_text().encode('utf-8')
 # def get_name(st):
@@ -136,8 +147,6 @@ if __name__ == '__main__':
 	# 	thread = Mytheading(sing_url,watch_datas)
 	# 	threads.append(thread)
 	# 	thread.start()
-	# for item in threads:
-	# 	item.join()
 	# print len(watch_datas)
 	# write_data_to_csv(watch_datas,i)
 	# print "done!"
