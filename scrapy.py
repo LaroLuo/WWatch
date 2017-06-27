@@ -11,13 +11,17 @@ import threading
 import time
 
 class Mytheading(threading.Thread):
-	def __init__(self,sing_url,watch_datas):
+	def __init__(self,i,watch_datas):
 		threading.Thread.__init__(self)
-		self.sing_url = sing_url
+		self.i = i
 		self.watch_datas = watch_datas
 	def run(self):
-		read_single_page_data(self.sing_url,self.watch_datas)
-i=0
+		url = read_urls(i)
+		for sing_url in url:
+			read_single_page_data(sing_url,self.watch_datas)
+		print len(self.watch_datas)
+		write_data_to_csv(self.watch_datas,self.i)
+num=0
 urlLock = threading.Lock()
 listLock = threading.Lock()
 watch = ["rolex","omega","longines","tissot","citizen","casio"]
@@ -27,7 +31,7 @@ file_name = ['rolex.csv',
 'tissot.csv',
 'citizen.csv',
 'casio.csv']
-url=[]
+
 headers= [(u'name'.encode('utf-8')),(u'手表款式').encode('utf-8'),
 (u'手表品牌').encode('utf-8'),(u'price').encode('utf-8'),(u'ww_price').encode('utf-8'),
 (u'商品编号').encode('utf-8'),(u'商品型号').encode('utf-8'),(u'机芯').encode('utf-8'),
@@ -66,14 +70,16 @@ def write_data_to_csv(watch_datas,i):
 
 
 def read_urls(i):
+	url = []
 	with open ("./url/"+str(file_name[i])) as f:
 		f_csv = csv.reader(f)
 		for row in f_csv:
 			for link in row:
 				url.append(link)
+	return url
 
 def read_single_page_data(single_url,watch_datas):
-	global i
+	global num
 	watch_data = dict()
 	single_url = "http://web.archive.org"+single_url
 	
@@ -93,14 +99,15 @@ def read_single_page_data(single_url,watch_datas):
 	watch_data = get_titel_data(soup,watch_data)
 	watch_data = get_description(soup,watch_data)
 	listLock.acquire()
-	print i 
-	i = i+1
+	print num 
+	num = num+1
 	try:
 		watch_datas.append(watch_data)
+		listLock.release()
 	except:
 		listLock.release()
 		return
-	listLock.release()
+	
 
 # st = soup.get_text().encode('utf-8')
 # def get_name(st):
@@ -124,20 +131,34 @@ def read_single_page_data(single_url,watch_datas):
 
 
 if __name__ == '__main__':
+	# for i in range(6):
+	# 	watch_datas = []
+	# 	url = []
+	# 	url = read_urls(i)
+	# 	for sing_url in url:
+	# 		read_single_page_data(sing_url,watch_datas)
+	# 	print len(watch_datas)
+	# 	write_data_to_csv(self.watch_datas,i)
+
+
 	for i in range(6):
 		watch_datas = []
 		threads = []
-		read_urls(i)
-		for sing_url in url:
-			thread = Mytheading(sing_url,watch_datas)
-			threads.append(thread)
-			thread.start()
-		for item in threads:
-			item.join()
-		print len(watch_datas)
-		write_data_to_csv(watch_datas,i)
-	print "done!"
+		url=[]
+		thread = Mytheading(i,watch_datas)
+		threads.append(thread)
+		thread.start()
+	for item in threads:
+		item.join()
 
+	# print "done!"
+	# i = 0
+	# watch_datas = []
+	# threads = []
+	# url=[]
+	# thread = Mytheading(i,watch_datas)
+	# thread.start()
+	# thread.join
 	# test
 	# i = 1
 	# watch_datas = []

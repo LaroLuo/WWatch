@@ -78,8 +78,8 @@ def get_desc_v1(soup,watch_desc):
 				print "not value data"
 				return watch_desc
 			watch_desc[name_switch(name)] = value
-			dt_data = dt_data.find_next("dt")
-			dd_data = dd_data.find_next("dd")
+		dt_data = dt_data.find_next("dt")
+		dd_data = dd_data.find_next("dd")
 	return watch_desc
 
 def get_desc_v2(soup,watch_desc):
