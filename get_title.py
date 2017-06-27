@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re
 url = "http://web.archive.org/web/20120517100431/http://www.wbiao.cn/rolex-g11189.html"
 url2 = "http://web.archive.org/web/20120619014216/http://www.wbiao.cn:80/omega-g4895.html"
-
+url3 = "http://web.archive.org/web/20120307175154/http://www.wbiao.cn/omega-g6394.html"
 
 def get_titel_data(soup,watch_title_data):
 	if soup.find(attrs={"class": "goods-main-info-1"})!=None:
@@ -56,10 +56,11 @@ def get_title_data_v1(soup,watch_title_data):
 				name = (strQ2B(item.b.string).rstrip(":")).encode('utf-8')
 				if(name_switch(name)==-1):
 					continue
-				try:
-					watch_title_data[name_switch(name)] = strQ2B(item.i.string).encode('utf-8')
-				except:
-					pass
+				if item.i.string!=None:
+					value = strQ2B(item.i.string).encode('utf-8')
+				else:
+					value = strQ2B(item.i.a.string).encode('utf-8')
+				watch_title_data[name_switch(name)] = value
 	m =soup.find(attrs ={"class": "goods-main-info-3"})
 	if m != None:
 		watch_title_data[3] = strQ2B(m.find("del").string[1:]).encode('utf-8')
@@ -76,7 +77,8 @@ def get_title_data_v2(soup,watch_title_data):
 				name = (strQ2B(item.dt.string).rstrip(":")).encode('utf-8')
 			if(name_switch(name)==-1):
 				continue
-			watch_title_data[name_switch(name)] =  strQ2B(item.dd.string).encode('utf-8')
+			value = strQ2B(item.dd.string).encode('utf-8')
+			watch_title_data[name_switch(name)] =  value
 	try:
 		reulst_set =  m.find(attrs={"class": "price"}).find_all("dl")
 	except:
@@ -95,7 +97,8 @@ def get_title_data_v2(soup,watch_title_data):
 	# 	watch_title_data[item.encode('utf-8')] =  
 
 if __name__ == '__main__':
-	content = urllib2.urlopen(url2)
+	watch_title_data = dict()
+	content = urllib2.urlopen(url3)
 	soup = BeautifulSoup(content,"html.parser")
-	get_titel_data(soup)
+	get_titel_data(soup,watch_title_data)
 	print watch_title_data.keys()

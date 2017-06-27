@@ -6,6 +6,7 @@ import re
 from get_title import strQ2B
 url = "http://web.archive.org/web/20120517100431/http://www.wbiao.cn/rolex-g11189.html"
 url2 = "http://web.archive.org/web/20120619014216/http://www.wbiao.cn:80/omega-g4895.html"
+url3 = "http://web.archive.org/web/20120307175154/http://www.wbiao.cn/omega-g6394.html"
 watch_desc = dict()
 def name_switch(st):
 	if st == (u'机芯').encode('utf-8'):
@@ -62,11 +63,11 @@ def get_desc_v1(soup,watch_desc):
 	dd_data = m.dd
 	i = 0
 	while dt_data != None and dd_data !=None:
-		try:
-			name = dt_data.string.encode('utf-8')
+		name = dt_data.string.encode('utf-8')
+		if dd_data.string!=None:
 			value = strQ2B(dd_data.string).encode('utf-8').strip()
-		except:
-			return watch_desc
+		else:
+			value = strQ2B(dd_data.a.string.string).encode('utf-8').strip()
 		if(name_switch(name)==-1):
 			dt_data = dt_data.find_next("dt")
 			dd_data = dd_data.find_next("dd")
@@ -95,11 +96,10 @@ def get_desc_v2(soup,watch_desc):
 	return watch_desc
 
 if __name__ == '__main__':
-	content = urllib2.urlopen(url)
+	content = urllib2.urlopen(url3)
 	soup = BeautifulSoup(content,"html.parser")
 	get_description(soup,watch_desc)
 	for item in watch_desc:
 		print str(item) + " " +watch_desc[item]
-
 
 	# print soup
