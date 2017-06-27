@@ -149,8 +149,8 @@ if __name__ == '__main__':
 		threads.append(thread)
 		thread.start()
 	for item in threads:
-		print str(item)+" died"
 		item.join()
+		print str(item.i)+" died"
 	print "done!"
 
 	# print "done!"
