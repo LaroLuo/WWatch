@@ -24,6 +24,7 @@ class Mytheading(threading.Thread):
 num=0
 urlLock = threading.Lock()
 listLock = threading.Lock()
+writeLock = threading.Lock()
 watch = ["rolex","omega","longines","tissot","citizen","casio"]
 file_name = ['rolex.csv',
 'omega.csv',
@@ -43,16 +44,18 @@ headers= [(u'name'.encode('utf-8')),(u'手表款式').encode('utf-8'),
 
 
 def write_data_to_csv(watch_datas,i):
-	with open (watch[i]+"_data.csv","wb") as csvfile:
+	with open ("result/"+watch[i]+"_data.csv","wb") as csvfile:
 		csvfile.write(u'\ufeff'.encode('utf8'))
 		csvwriter = csv.writer(csvfile, delimiter = ',')
 		csvwriter.writerow(headers)
+		writeLock.acquire()
 		for watch_data in watch_datas:
 			try:
 				csvwriter.writerow(watch_data.values())
 			except:
 				print "write on no data"
 				pass
+		writeLock.release()
 			# csvwriter.writerow({0:watch_data[0],1:watch_data[1],
 			# 	2:watch_data[2],3:watch_data[3],
 			# 	4:watch_data[4],5:watch_data[5],
@@ -150,6 +153,7 @@ if __name__ == '__main__':
 		thread.start()
 	for item in threads:
 		item.join()
+	print "done!"
 
 	# print "done!"
 	# i = 0
