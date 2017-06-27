@@ -134,46 +134,27 @@ def read_single_page_data(single_url,watch_data):
 
 
 if __name__ == '__main__':
+
+	# watch_datas = [[] for i in range(6)]
 	# for i in range(6):
-	# 	watch_datas = []
-	# 	url = []
-	# 	url = read_urls(i)
-	# 	for sing_url in url:
-	# 		read_single_page_data(sing_url,watch_datas)
-	# 	print len(watch_datas)
-	# 	write_data_to_csv(self.watch_datas,i)
-	watch_datas = [[] for i in range(6)]
-	for i in range(6):
-		threads = []
-		thread = Mytheading(i,watch_datas[i])
-		threads.append(thread)
-		thread.start()
+	# 	threads = []
+	# 	thread = Mytheading(i,watch_datas[i])
+	# 	threads.append(thread)
+	# 	thread.start()
+	# for item in threads:
+	# 	item.join()
+	# 	print str(item.i)+" died"
+	# print "done!"
+
+	i = 0
+	threads = []
+	thread = Mytheading(i,watch_datas[i])
+	threads.append(thread)
+	thread.start()
 	for item in threads:
 		item.join()
 		print str(item.i)+" died"
 	print "done!"
-
-	# print "done!"
-	# i = 0
-	# watch_datas = []
-	# threads = []
-	# url=[]
-	# thread = Mytheading(i,watch_datas)
-	# thread.start()
-	# thread.join
-	# test
-	# i = 1
-	# watch_datas = []
-	# threads = []
-	# read_urls(i)
-	# for sing_url in url:
-	# 	thread = Mytheading(sing_url,watch_datas)
-	# 	threads.append(thread)
-	# 	thread.start()
-	# print len(watch_datas)
-	# write_data_to_csv(watch_datas,i)
-	# print "done!"
-
 
 
 
