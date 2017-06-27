@@ -11,16 +11,16 @@ import threading
 import time
 
 class Mytheading(threading.Thread):
-	def __init__(self,i,watch_datas):
+	def __init__(self,i,watch_data):
 		threading.Thread.__init__(self)
 		self.i = i
-		self.watch_datas = watch_datas
+		self.watch_data = watch_data
 	def run(self):
 		url = read_urls(i)
 		for sing_url in url:
-			read_single_page_data(sing_url,self.watch_datas)
-		print len(self.watch_datas)
-		write_data_to_csv(self.watch_datas,self.i)
+			read_single_page_data(sing_url,self.watch_data)
+		print len(self.watch_data)
+		write_data_to_csv(self.watch_data,self.i)
 num=0
 urlLock = threading.Lock()
 listLock = threading.Lock()
@@ -43,15 +43,16 @@ headers= [(u'name'.encode('utf-8')),(u'手表款式').encode('utf-8'),
 (u'功能').encode('utf-8'),(u'推出年份').encode('utf-8')]
 
 
-def write_data_to_csv(watch_datas,i):
+def write_data_to_csv(watch_data,i):
 	writeLock.acquire()
+	print "thread "+ str(i)+" "+str(watch[i])
 	with open ("result/"+watch[i]+"_data.csv","wb") as csvfile:
 		csvfile.write(u'\ufeff'.encode('utf8'))
 		csvwriter = csv.writer(csvfile, delimiter = ',')
 		csvwriter.writerow(headers)
-		for watch_data in watch_datas:
+		for sing_data in watch_data:
 			try:
-				csvwriter.writerow(watch_data.values())
+				csvwriter.writerow(sing_data.values())
 			except:
 				print "write on no data"
 				pass
@@ -81,9 +82,9 @@ def read_urls(i):
 				url.append(link)
 	return url
 
-def read_single_page_data(single_url,watch_datas):
+def read_single_page_data(single_url,watch_data):
 	global num
-	watch_data = dict()
+	sing_data = dict()
 	single_url = "http://web.archive.org"+single_url
 	
 	urlLock.acquire()
@@ -99,17 +100,16 @@ def read_single_page_data(single_url,watch_datas):
 			return
 	urlLock.release()
 	soup = BeautifulSoup(content,"html.parser")
-	watch_data = get_titel_data(soup,watch_data)
-	watch_data = get_description(soup,watch_data)
+	sing_data = get_titel_data(soup,sing_data)
+	sing_data = get_description(soup,sing_data)
 	listLock.acquire()
 	print num 
+	listLock.release()
 	num = num+1
 	try:
-		watch_datas.append(watch_data)
-		listLock.release()
+		watch_data.append(sing_data)
 	except:
-		listLock.release()
-		return
+		pass
 	
 
 # st = soup.get_text().encode('utf-8')
@@ -142,16 +142,14 @@ if __name__ == '__main__':
 	# 		read_single_page_data(sing_url,watch_datas)
 	# 	print len(watch_datas)
 	# 	write_data_to_csv(self.watch_datas,i)
-
-
+	watch_datas = [[] for i in range(6)]
 	for i in range(6):
-		watch_datas = []
 		threads = []
-		url=[]
-		thread = Mytheading(i,watch_datas)
+		thread = Mytheading(i,watch_datas[i])
 		threads.append(thread)
 		thread.start()
 	for item in threads:
+		print str(item)+" died"
 		item.join()
 	print "done!"
 
