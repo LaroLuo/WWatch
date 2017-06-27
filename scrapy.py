@@ -16,7 +16,7 @@ class Mytheading(threading.Thread):
 		self.i = i
 		self.watch_data = watch_data
 	def run(self):
-		url = read_urls(i)
+		url = read_urls(self.i )
 		for sing_url in url:
 			read_single_page_data(sing_url,self.watch_data)
 		print len(self.watch_data)
@@ -135,26 +135,26 @@ def read_single_page_data(single_url,watch_data):
 
 if __name__ == '__main__':
 
-	# watch_datas = [[] for i in range(6)]
-	# for i in range(6):
-	# 	threads = []
-	# 	thread = Mytheading(i,watch_datas[i])
-	# 	threads.append(thread)
-	# 	thread.start()
-	# for item in threads:
-	# 	item.join()
-	# 	print str(item.i)+" died"
-	# print "done!"
 	watch_datas = [[] for i in range(6)]
-	i = 0
-	threads = []
-	thread = Mytheading(i,watch_datas[i])
-	threads.append(thread)
-	thread.start()
+	for i in range(6):
+		threads = []
+		thread = Mytheading(i,watch_datas[i])
+		threads.append(thread)
+		thread.start()
 	for item in threads:
 		item.join()
 		print str(item.i)+" died"
 	print "done!"
+	# watch_datas = [[] for i in range(6)]
+	# i = 0
+	# threads = []
+	# thread = Mytheading(i,watch_datas[i])
+	# threads.append(thread)
+	# thread.start()
+	# for item in threads:
+	# 	item.join()
+	# 	print str(item.i)+" died"
+	# print "done!"
 
 
 
