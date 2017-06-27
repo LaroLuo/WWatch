@@ -145,7 +145,7 @@ if __name__ == '__main__':
 	# 	item.join()
 	# 	print str(item.i)+" died"
 	# print "done!"
-
+	watch_datas = [[] for i in range(6)]
 	i = 0
 	threads = []
 	thread = Mytheading(i,watch_datas[i])
