@@ -137,10 +137,13 @@ if __name__ == '__main__':
 
 	watch_datas = [[] for i in range(6)]
 	for i in range(6):
-		threads = []
-		thread = Mytheading(i,watch_datas[i])
-		threads.append(thread)
-		thread.start()
+		if i!=5:
+			pass
+		else:
+			threads = []
+			thread = Mytheading(i,watch_datas[i])
+			threads.append(thread)
+			thread.start()
 	for item in threads:
 		item.join()
 		print str(item.i)+" died"
